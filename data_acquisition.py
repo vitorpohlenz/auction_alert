@@ -11,7 +11,46 @@ sys.dont_write_bytecode = True
 # Common imports
 import pandas as pd
 
-data = pd.read_csv('https://venda-imoveis.caixa.gov.br/listaweb/Lista_imoveis_SC.csv', sep=';', encoding='ISO-8859-1', skiprows=2)
+# Constants
+COLUMNS_NAMES_MAP = {
+    ' N° do imóvel':'Id',
+    'UF':'State', 
+    'Cidade':'City', 
+    'Bairro':'District', 
+    'Endereço':'Adress', 
+    'Preço':'Price',
+    'Valor de avaliação':'Appraisal',
+    'Desconto':'Discount',
+    'Descrição':'Description',
+    'Modalidade de venda':'Modality',
+    'Link de acesso':'Link'
+}
+
+# data = pd.read_csv('https://venda-imoveis.caixa.gov.br/listaweb/Lista_imoveis_SC.csv', sep=';', encoding='ISO-8859-1', skiprows=2)
+
+def download_data(data_url: str, sep: str, decimal: str, thousand_separator: str, encoding: str, skiprows: int) -> pd.DataFrame:
+    
+    data = pd.read_csv(data_url, sep=sep, decimal=decimal, thousands=thousand_separator, encoding=encoding, skiprows=skiprows)
+
+    return data
+
+def adjust_data(data_df: pd.DataFrame, columns_names: dict[str]) -> pd.DataFrame:
+
+    data = data_df.copy()
+    data.rename(columns=columns_names, inplace=True)
+    
+    return data
+
+data = download_data(
+    data_url='https://venda-imoveis.caixa.gov.br/listaweb/Lista_imoveis_SC.csv',
+    sep=';',
+    decimal=',',
+    thousand_separator='.',
+    encoding='ISO-8859-1',
+    skiprows=2
+    )
+
+data = adjust_data(data, columns_names=COLUMNS_NAMES_MAP)
 
 print(data)
 

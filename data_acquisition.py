@@ -28,6 +28,14 @@ COLUMNS_NAMES_MAP = {
 
 # data = pd.read_csv('https://venda-imoveis.caixa.gov.br/listaweb/Lista_imoveis_SC.csv', sep=';', encoding='ISO-8859-1', skiprows=2)
 
+def url_builder(state: str, site: str = 'caixa') -> str:
+    if site=='caixa':
+        url_data = 'https://venda-imoveis.caixa.gov.br/listaweb/Lista_imoveis_{}.csv'.format(state)
+    else:
+        raise NotImplementedError('Invalid Site!')
+    
+    return url_data
+
 def download_data(data_url: str, sep: str, decimal: str, thousand_separator: str, encoding: str, skiprows: int) -> pd.DataFrame:
     
     data = pd.read_csv(data_url, sep=sep, decimal=decimal, thousands=thousand_separator, encoding=encoding, skiprows=skiprows)
@@ -54,7 +62,7 @@ def adjust_data(data_df: pd.DataFrame, columns_names: dict[str]) -> pd.DataFrame
     return data
 
 data = download_data(
-    data_url='https://venda-imoveis.caixa.gov.br/listaweb/Lista_imoveis_SC.csv',
+    data_url=url_builder(state='SC'),
     sep=';',
     decimal=',',
     thousand_separator='.',

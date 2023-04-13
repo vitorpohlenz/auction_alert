@@ -38,6 +38,9 @@ def adjust_data(data_df: pd.DataFrame, columns_names: dict[str]) -> pd.DataFrame
 
     data = data_df.copy()
     data.rename(columns=columns_names, inplace=True)
+    data['City'] = data['City'].str.replace('(\s?)$','',regex=True)
+    data['Discount'] = data['Discount'].apply(lambda xrow: xrow/100 if xrow>1 else xrow)
+    data['Category'] = data['Description'].apply(lambda s: s.split(',')[0])
     
     return data
 

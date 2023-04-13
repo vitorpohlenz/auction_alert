@@ -37,9 +37,18 @@ def download_data(data_url: str, sep: str, decimal: str, thousand_separator: str
 def adjust_data(data_df: pd.DataFrame, columns_names: dict[str]) -> pd.DataFrame:
 
     data = data_df.copy()
+
+    # Renaming columns.
     data.rename(columns=columns_names, inplace=True)
+
+    # Removing white spaces at the end of each string.
     data['City'] = data['City'].str.replace('(\s?)$','',regex=True)
-    data['Discount'] = data['Discount'].apply(lambda xrow: xrow/100 if xrow>1 else xrow)
+
+    # Checkin if discount values is greater than 100% and than adjusting it. 
+    ## This can occur because the use of dot as decimal and thousand separator.
+    data['Discount'] = data['Discount'].apply(lambda xrow: xrow/100 if xrow>100 else xrow)
+
+    # Creating the categories based on description.
     data['Category'] = data['Description'].apply(lambda s: s.split(',')[0])
     
     return data

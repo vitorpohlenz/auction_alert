@@ -44,6 +44,7 @@ def download_data(data_url: str, sep: str, decimal: str, thousand_separator: str
 
 def adjust_data(data_df: pd.DataFrame, columns_names: dict[str]) -> pd.DataFrame:
 
+    # Copy data to avoid problems with Python pointer's.
     data = data_df.copy()
 
     # Renaming columns.
@@ -60,6 +61,39 @@ def adjust_data(data_df: pd.DataFrame, columns_names: dict[str]) -> pd.DataFrame
     data['Category'] = data['Description'].apply(lambda s: s.split(',')[0])
     
     return data
+
+def filter_data(
+        data_df: pd.DataFrame, 
+        city: str = None, 
+        category: str = None, 
+        lower_price: float = None, 
+        upper_price: float = None) -> pd.DataFrame:
+
+    # Copy data to avoid problems with Python pointer's.
+    df = data_df.copy()
+
+    # Checking filters conditions.
+    if city is not None:
+        df = df.loc[df['City']==city]
+
+    if category is not None:
+        df = df.loc[df['Category']==category]
+
+    if (lower_price is not None) & (upper_price is not None):
+        df = df.loc[ (df['Price'] >= lower_price ) & (df['Price'] <= upper_price)]
+
+    elif lower_price is not None:
+        df = df.loc[df['Price'] >= lower_price ]
+
+    elif upper_price is not None:
+        df = df.loc[df['Price'] <= upper_price ]
+
+    return df
+
+
+
+
+
 
 data = download_data(
     data_url=url_builder(state='SC'),

@@ -10,6 +10,7 @@ sys.dont_write_bytecode = True
 
 # Common imports
 import pandas as pd
+from typing import Callable
 
 # Constants
 COLUMNS_NAMES_MAP = {
@@ -36,9 +37,26 @@ def url_builder(state: str, site: str = 'caixa') -> str:
     
     return url_data
 
-def download_data(data_url: str, sep: str, decimal: str, thousand_separator: str, encoding: str, skiprows: int) -> pd.DataFrame:
-    
-    data = pd.read_csv(data_url, sep=sep, decimal=decimal, thousands=thousand_separator, encoding=encoding, skiprows=skiprows)
+def download_data(
+        data_url: str, 
+        sep: str, 
+        decimal: str, 
+        thousand_separator: str, 
+        encoding: str, 
+        skiprows: int,
+        bad_lines_fixing: Callable[[list[str]], list[str]] = None) -> pd.DataFrame:
+
+    # If there is no way to fix bad lines(or they did not exists), sets the default value for pandas method.
+    if bad_lines_fixing is None:
+        bad_lines_fixing = 'error'
+        engine = 'c'
+    else:
+        engine = 'python'
+
+    # Reading the csv.
+    data = pd.read_csv(
+        data_url, sep=sep, decimal=decimal, thousands=thousand_separator, 
+        encoding=encoding, skiprows=skiprows, on_bad_lines=bad_lines_fixing, engine=engine)
 
     return data
 
@@ -90,7 +108,10 @@ def filter_data(
 
     return df
 
-
+def bad_lines_fixing(bad_line: list[str]) -> list[str]:
+    # The bad lines are because the use of ';' in 'Adress' column.
+    fixed_line = bad_line[:4]+[bad_line[4] + bad_line[5]] + bad_line[6:] 
+    return fixed_line
 
 
 
@@ -101,7 +122,8 @@ data = download_data(
     decimal=',',
     thousand_separator='.',
     encoding='ISO-8859-1',
-    skiprows=2
+    skiprows=2,
+    bad_lines_fixing=bad_lines_fixing
     )
 
 data = adjust_data(data, columns_names=COLUMNS_NAMES_MAP)

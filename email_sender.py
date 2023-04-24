@@ -66,7 +66,7 @@ def send_email(
     text = message.as_string()
 
     context = ssl.create_default_context()
-    
+
     # Sending email
     with smtplib.SMTP(host = host, port= port) as server:
         server.starttls(context=context)

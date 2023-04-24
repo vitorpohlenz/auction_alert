@@ -61,7 +61,7 @@ def send_email(
 
         # Adding attachment to message.
         message.attach(part)
-    
+
     # Converting message to str.
     text = message.as_string()
 

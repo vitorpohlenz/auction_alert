@@ -49,3 +49,6 @@ env*
 
 # VSCode
 *.vscode
+
+# Data Files
+data/*

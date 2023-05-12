@@ -39,7 +39,7 @@ users = pd.read_csv(data_dir+'users.csv')
 filters = pd.read_csv(data_dir+'filters.csv')
 
 # Getting the users and filters to send notifications.
-setups =  users.merge(filters, on='UserId')
+setups =  users.merge(filters, on='UserId', how='inner')
 
 # Using for to not compromise the Memory of the computer when the script is running.
 # It can be paralelized with and pandas.apply or map() but it can be memory expensive with many filters/users.

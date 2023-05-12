@@ -147,20 +147,3 @@ def filter_data(
         df = df.loc[df['Price'] <= upper_price ]
 
     return df
-
-
-data = download_data(
-    data_url=url_builder(state='SC'),
-    sep=';',
-    decimal=',',
-    thousand_separator='.',
-    encoding='ISO-8859-1',
-    skiprows=2,
-    bad_lines_fixing=bad_lines_fixing
-    )
-
-data = adjust_data(data, columns_names=COLUMNS_NAMES_MAP)
-
-df = get_auctions_data(state='SC')
-
-

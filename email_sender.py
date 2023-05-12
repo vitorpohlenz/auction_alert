@@ -16,11 +16,40 @@ from email.mime.base import MIMEBase
 from email import encoders
 import smtplib
 import ssl
+import pandas as pd
+
+
+def send_action_notification(
+        data_df: pd.DataFrame,
+        output_dir: str,
+        user: str,
+        filter_id: int,
+        receiver_email: str
+        ) -> bool:
+    
+    if not os.path.exists(output_dir):
+        os.makedirs(output_dir)
+
+    file_path = output_dir+ f'Filtro{filter_id}.csv'
+    data_df.to_csv(file_path, sep=';', index=False)
+
+    message_subject = f"Auction notification for {user}"
+    message_body = "Segue abaixo e em anexo os imóveis encontrados para o filtro cadastrado. \n"
+    message_body += data_df.to_string()
+
+    send_email(
+        receivers_email=[receiver_email],
+        subject=message_subject,
+        body_message=message_body,
+        attachment_paths=[file_path]
+    )
+
 
 
 def send_email(
         receivers_email: list[str], 
-        subject: str, body_message: str, 
+        subject: str, 
+        body_message: str, 
         attachment_paths: list[str] = [],
         host: str = 'smtp.gmail.com', port: int = 587, 
         sender_email: str =  "vpzleiloes@gmail.com",

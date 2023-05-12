@@ -27,6 +27,15 @@ COLUMNS_NAMES_MAP = {
     'Link de acesso':'Link'
 }
 
+FILTER_TYPES = {
+    0:'State',
+    1:'City',
+    2:'Category',
+    3:'Modality',
+    4:'LowerPrice',
+    5:'UpperPrice'
+}
+
 # data = pd.read_csv('https://venda-imoveis.caixa.gov.br/listaweb/Lista_imoveis_SC.csv', sep=';', encoding='ISO-8859-1', skiprows=2)
 
 def url_builder(state: str, site: str = 'caixa') -> str:
@@ -42,9 +51,10 @@ def download_data(
         sep: str, 
         decimal: str, 
         thousand_separator: str, 
-        encoding: str, 
         skiprows: int,
-        bad_lines_fixing: Callable[[list[str]], list[str]] = None) -> pd.DataFrame:
+        encoding: str,
+        bad_lines_fixing: Callable[[list[str]], list[str]] = None
+        ) -> pd.DataFrame:
 
     # If there is no way to fix bad lines(or they did not exists), sets the default value for pandas method.
     if bad_lines_fixing is None:
@@ -80,40 +90,63 @@ def adjust_data(data_df: pd.DataFrame, columns_names: dict[str]) -> pd.DataFrame
     
     return data
 
-def filter_data(
-        data_df: pd.DataFrame, 
-        city: str = None, 
-        category: str = None, 
-        lower_price: float = None, 
-        upper_price: float = None) -> pd.DataFrame:
-
-    # Copy data to avoid problems with Python pointer's.
-    df = data_df.copy()
-
-    # Checking filters conditions.
-    if city is not None:
-        df = df.loc[df['City']==city]
-
-    if category is not None:
-        df = df.loc[df['Category']==category]
-
-    if (lower_price is not None) & (upper_price is not None):
-        df = df.loc[ (df['Price'] >= lower_price ) & (df['Price'] <= upper_price)]
-
-    elif lower_price is not None:
-        df = df.loc[df['Price'] >= lower_price ]
-
-    elif upper_price is not None:
-        df = df.loc[df['Price'] <= upper_price ]
-
-    return df
-
 def bad_lines_fixing(bad_line: list[str]) -> list[str]:
     # The bad lines are because the use of ';' in 'Adress' column.
     fixed_line = bad_line[:4]+[bad_line[4] + bad_line[5]] + bad_line[6:] 
     return fixed_line
 
+def get_auctions_data(state :str, site: str = 'caixa') -> pd.DataFrame:
+    if site != 'caixa':
+        raise NotImplementedError('Invalid Site!')
+    
+    # Dowloading the data.
+    data = download_data(
+        data_url=url_builder(state=state),
+        sep=';',
+        decimal=',',
+        thousand_separator='.',
+        encoding='ISO-8859-1',
+        skiprows=2,
+        bad_lines_fixing=bad_lines_fixing
+        )
 
+    # Adjusting data columns and values.
+    data = adjust_data(data, columns_names=COLUMNS_NAMES_MAP)
+
+    return data
+
+
+def filter_data(
+        data_df: pd.DataFrame, 
+        city: str = None, 
+        category: str = None, 
+        lower_price: float = None, 
+        upper_price: float = None,
+        modality: str = None) -> pd.DataFrame:
+
+    # Copy data to avoid problems with Python pointer's.
+    df = data_df.copy()
+
+    # Checking filters conditions.
+    if not pd.isnull(city):
+        df = df.loc[df['City']==city]
+
+    if not pd.isnull(category):
+        df = df.loc[df['Category']==category]
+
+    if not pd.isnull(modality):
+        df = df.loc[df['Modality']==modality]
+
+    if (not pd.isnull(lower_price)) & (not pd.isnull(upper_price)):
+        df = df.loc[ (df['Price'] >= lower_price ) & (df['Price'] <= upper_price)]
+
+    elif not pd.isnull(lower_price):
+        df = df.loc[df['Price'] >= lower_price ]
+
+    elif not pd.isnull(upper_price):
+        df = df.loc[df['Price'] <= upper_price ]
+
+    return df
 
 
 data = download_data(
@@ -128,6 +161,6 @@ data = download_data(
 
 data = adjust_data(data, columns_names=COLUMNS_NAMES_MAP)
 
-print(data)
+df = get_auctions_data(state='SC')
 
 

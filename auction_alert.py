@@ -14,8 +14,8 @@ import re
 import pandas as pd
 
 # Project Imports
-from data_acquisition import (get_auctions_data, filter_data)
-from email_sender import send_action_notification
+from functions.data_acquisition import (get_auctions_data, filter_data)
+from functions.email_sender import send_action_notification
 
 # Getting the project folder by the file execution.
 script_dir = os.path.abspath(__file__)

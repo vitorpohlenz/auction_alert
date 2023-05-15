@@ -24,19 +24,35 @@ def send_action_notification(
         output_dir: str,
         user: str,
         filter_id: int,
-        receiver_email: str
+        receiver_email: str,
+        state: str = None,
+        city: str = None,
+        category: str = None
         ) -> bool:
-    
+
+    # Creating output folder to save the file attachments if it doesn't exists.
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
 
-    file_path = output_dir+ f'Filtro{filter_id}.csv'
+    # Building the attachment file name and email subject with not null information.
+    file_name= f'Filtro_{filter_id}_{user}'
+    message_subject = f"Auction notification for {user}"
+    for s in (state, city, category):
+        if not pd.isnull(s):
+            file_name += f'_{s}'
+            message_subject += f', {s}'
+
+    file_name += '.csv'
+
+    # File path to save the attachment.
+    file_path = output_dir+ file_name
     data_df.to_csv(file_path, sep=';', index=False)
 
-    message_subject = f"Auction notification for {user}"
+    # Building the body message of email.
     message_body = "Segue abaixo e em anexo os imóveis encontrados para o filtro cadastrado. \n"
     message_body += data_df.to_string()
 
+    # Sending email to receiver.
     send_email(
         receivers_email=[receiver_email],
         subject=message_subject,

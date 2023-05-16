@@ -39,6 +39,26 @@ FILTER_TYPES = {
 # data = pd.read_csv('https://venda-imoveis.caixa.gov.br/listaweb/Lista_imoveis_SC.csv', sep=';', encoding='ISO-8859-1', skiprows=2)
 
 def url_builder(state: str, site: str = 'caixa') -> str:
+    """
+    Function to build the URL to download the data.
+
+    Parameters
+    ----------
+    state : str
+        Desired state to download the data
+    site : str, optional
+        Desired site to download the data, by default 'caixa'
+
+    Returns
+    -------
+    str
+        URL to download the data
+
+    Raises
+    ------
+    NotImplementedError
+        If the builder for desired site doesn't exists throws an error.
+    """
     if site=='caixa':
         url_data = 'https://venda-imoveis.caixa.gov.br/listaweb/Lista_imoveis_{}.csv'.format(state)
     else:
@@ -55,6 +75,31 @@ def download_data(
         encoding: str,
         bad_lines_fixing: Callable[[list[str]], list[str]] = None
         ) -> pd.DataFrame:
+    """
+    Function to download the data from the desired URL.
+
+    Parameters
+    ----------
+    data_url : str
+        URL to download the data
+    sep : str
+        Columns separators
+    decimal : str
+        Character to recognize as decimal point
+    thousand_separator : str
+        Thousands separator
+    skiprows : int
+        Number of lines to skip at the start of the file
+    encoding : str
+        Encoding to use for UTF when reading. [List of Python standard encodings](https://docs.python.org/3/library/codecs.html#standard-encodings)
+    bad_lines_fixing : Callable[[list[str]], list[str]], optional
+        Specifies what to do upon encountering a bad line (a line with too many fields), by default None
+
+    Returns
+    -------
+    pd.DataFrame
+        Data frame containing the downloaded data.
+    """
 
     # If there is no way to fix bad lines(or they did not exists), sets the default value for pandas method.
     if bad_lines_fixing is None:
@@ -71,6 +116,21 @@ def download_data(
     return data
 
 def adjust_data(data_df: pd.DataFrame, columns_names: dict[str]) -> pd.DataFrame:
+    """
+    Function to adjust the auctions data.
+
+    Parameters
+    ----------
+    data_df : pd.DataFrame
+        Data to be adjusted
+    columns_names : dict[str]
+        Mapping of the columns names to be renamed. Like: {'Old_name':'New_name'}.
+
+    Returns
+    -------
+    pd.DataFrame
+        Adjusted data.
+    """
 
     # Copy data to avoid problems with Python pointer's.
     data = data_df.copy()
@@ -97,6 +157,26 @@ def bad_lines_fixing(bad_line: list[str]) -> list[str]:
     return fixed_line
 
 def get_auctions_data(state :str, site: str = 'caixa') -> pd.DataFrame:
+    """
+    Function to get the final data (download and adjust) from specific site and state.
+
+    Parameters
+    ----------
+    state : str
+        Desired state
+    site : str, optional
+        Desired site to download, by default 'caixa'
+
+    Returns
+    -------
+    pd.DataFrame
+        Final data from the site and state
+
+    Raises
+    ------
+    NotImplementedError
+        If there is no implementation for desired site, throws an error.
+    """
     if site != 'caixa':
         raise NotImplementedError('Invalid Site!')
     
@@ -124,6 +204,29 @@ def filter_data(
         lower_price: float = None, 
         upper_price: float = None,
         modality: str = None) -> pd.DataFrame:
+    """
+    Function to filter the data based on conditions.
+
+    Parameters
+    ----------
+    data_df : pd.DataFrame
+        Data to be filterd
+    city : str, optional
+        Desired city, by default None
+    category : str, optional
+        Desired auction category, by default None
+    lower_price : float, optional
+        Desired minimum price, by default None
+    upper_price : float, optional
+        Desired maximum price, by default None
+    modality : str, optional
+        Desired auction modality, by default None
+
+    Returns
+    -------
+    pd.DataFrame
+        Data filtered
+    """
 
     # Copy data to avoid problems with Python pointer's.
     df = data_df.copy()

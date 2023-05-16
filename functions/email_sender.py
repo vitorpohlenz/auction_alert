@@ -47,7 +47,7 @@ def send_action_notification(
 
     # File path to save the attachment.
     file_path = output_dir+ file_name
-    data_df.to_csv(file_path, sep=';', index=False)
+    data_df.to_csv(file_path, index=False)
 
     # Building the body message of email.
     message_body = "Segue abaixo e em anexo os imóveis encontrados para o filtro cadastrado. \n"

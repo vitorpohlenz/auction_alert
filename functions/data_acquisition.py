@@ -80,6 +80,7 @@ def adjust_data(data_df: pd.DataFrame, columns_names: dict[str]) -> pd.DataFrame
 
     # Removing white spaces at the end of each string.
     data['City'] = data['City'].str.replace('(\s?)$','',regex=True)
+    data['State'] = data['State'].str.replace('(\s?)$','',regex=True)
 
     # Checkin if discount values is greater than 100% and than adjusting it. 
     ## This can occur because the use of dot as decimal and thousand separator.

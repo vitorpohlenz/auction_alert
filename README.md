@@ -58,3 +58,10 @@ Create the folder data/ containing the files:
 |1|1|"SP"|"SAO PAULO"|||||
 |2|1|"RJ"||"Terreno"||||
 |3|2|"MG"|"BELO HORIZONTE"|"Casa"||||
+
+## Runing this project.
+Just run the file `auction_alert.py` with the python interpreter inside your virtual environment.
+
+Ex:
+- Linux: `./venv/bin/python auction_alert.py`
+- Windows: `.\venv\Scripts\python.exe auction_alert.py`

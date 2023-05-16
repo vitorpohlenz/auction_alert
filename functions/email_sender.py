@@ -34,15 +34,17 @@ def send_action_notification(
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
 
-    # Building the attachment file name and email subject with not null information.
-    file_name= f'Filtro_{filter_id}_{user}'
+    # Building the email subject with not null information.
     message_subject = f"Auction notification for {user}"
     for s in (state, city, category):
         if not pd.isnull(s):
             file_name += f'_{s}'
             message_subject += f', {s}'
-
-    file_name += '.csv'
+    
+    # Building the email file name attachment.
+    file_name = create_attachment_file_name(
+        user=user, filter_id=filter_id, state=state, city=city, category=category
+        )
 
     # File path to save the attachment.
     file_path = output_dir+ file_name
@@ -59,8 +61,6 @@ def send_action_notification(
         body_message=message_body,
         attachment_paths=[file_path]
     )
-
-
 
 def send_email(
         receivers_email: list[str], 
@@ -117,3 +117,21 @@ def send_email(
         server.starttls(context=context)
         server.login(sender_email, password)
         server.sendmail(sender_email, receivers_email, text)
+
+def create_attachment_file_name(
+        user: str,
+        filter_id: int,
+        state: str = None,
+        city: str = None,
+        category: str = None
+        ) -> str:
+    
+    # Building the attachment file name with not null information.
+    file_name= f'Filtro_{filter_id}_{user}'
+    for s in (state, city, category):
+        if not pd.isnull(s):
+            file_name += f'_{s}'
+
+    file_name += '.csv'
+
+    return file_name

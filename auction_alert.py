@@ -15,7 +15,7 @@ import pandas as pd
 
 # Project Imports
 from functions.data_acquisition import (get_auctions_data, filter_data)
-from functions.email_sender import send_action_notification
+from functions.email_sender import send_action_notification, create_attachment_file_name
 
 # Getting the project folder by the file execution.
 script_dir = os.path.abspath(__file__)
@@ -47,6 +47,7 @@ for k in range(setups.shape[0]):
     xrow = setups.loc[k]
     data = get_auctions_data(state=xrow.State)
 
+    # Filtering Data based on conditions.
     data = filter_data(
         data_df=data,
         city=xrow.City,
@@ -55,12 +56,38 @@ for k in range(setups.shape[0]):
         upper_price=xrow.UpperPrice,
         modality=xrow.Modality
         )
-    
+
+    # Checking if there is data to send in email.
     if not data.empty:
-        send_action_notification(
-            data_df=data,
-            output_dir=script_dir+'outputs/',
+        output_dir = script_dir+'outputs/'
+        file_name = create_attachment_file_name(
             user=xrow.UserName,
             filter_id=xrow.FilterId,
-            receiver_email=xrow.UserEmail
-        )
+            state=xrow.State,
+            city=xrow.City,
+            category=xrow.Category
+            )
+
+        file_path = output_dir+file_name
+
+        # If this email was already sent in the past check if there is any update in the data.
+        if os.path.exists(file_path):
+            old_data = pd.read_csv(file_path)
+            
+            # If it has updates send new email.
+            send_data = not old_data.equals(data)
+        else:
+            # If is the first time sending data for this filter automatically sends the email.
+            send_data = True
+
+        if send_data:
+            send_action_notification(
+                data_df=data,
+                output_dir=script_dir+'outputs/',
+                user=xrow.UserName,
+                filter_id=xrow.FilterId,
+                receiver_email=xrow.UserEmail,
+                state=xrow.State,
+                city=xrow.City,
+                category=xrow.Category
+            )

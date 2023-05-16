@@ -36,8 +36,6 @@ FILTER_TYPES = {
     5:'UpperPrice'
 }
 
-# data = pd.read_csv('https://venda-imoveis.caixa.gov.br/listaweb/Lista_imoveis_SC.csv', sep=';', encoding='ISO-8859-1', skiprows=2)
-
 def url_builder(state: str, site: str = 'caixa') -> str:
     """
     Function to build the URL to download the data.

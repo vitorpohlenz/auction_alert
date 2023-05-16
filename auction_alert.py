@@ -72,7 +72,7 @@ for k in range(setups.shape[0]):
 
         # If this email was already sent in the past check if there is any update in the data.
         if os.path.exists(file_path):
-            old_data = pd.read_csv(file_path)
+            old_data = pd.read_csv(file_path, sep=';')
             
             # If it has updates send new email.
             send_data = not old_data.equals(data)

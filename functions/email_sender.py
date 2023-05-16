@@ -28,7 +28,29 @@ def send_action_notification(
         state: str = None,
         city: str = None,
         category: str = None
-        ) -> bool:
+        ) -> None:
+    """
+    Function to prepare and send the data by email.
+
+    Parameters
+    ----------
+    data_df : pd.DataFrame
+        Data frame with auctions data of desired filter.
+    output_dir : str
+        Directory to save the data as attachment of email.
+    user : str
+        The user that wants to receive the email with the filtered data.
+    filter_id : int
+        FilterId of this data filtered.
+    receiver_email : str
+        Email of the user to receive the data by email.
+    state : str, optional
+        State of the filter, by default None
+    city : str, optional
+        City of the filter, by default None
+    category : str, optional
+        Category of the filter, by default None
+    """
 
     # Creating output folder to save the file attachments if it doesn't exists.
     if not os.path.exists(output_dir):
@@ -69,7 +91,29 @@ def send_email(
         host: str = 'smtp.gmail.com', port: int = 587, 
         sender_email: str =  "vpzleiloes@gmail.com",
         password: str = None
-        ):
+        ) -> None:
+    """
+    Function to send email from python.
+
+    Parameters
+    ----------
+    receivers_email : list[str]
+        Emails of the receivers
+    subject : str
+        Subject of the email
+    body_message : str
+        Body message of the email
+    attachment_paths : list[str], optional
+        File paths of attachments, by default []
+    host : str, optional
+        SMTP host of the sender email, by default 'smtp.gmail.com'
+    port : int, optional
+        Port of the SMTP of the sender email, by default 587
+    sender_email : str, optional
+        Sender email, by default "vpzleiloes@gmail.com"
+    password : str, optional
+        Password of the sender email, by default None
+    """
 
     # If no password is provide, reads the password from environment variable.
     if password is None:
@@ -124,6 +168,27 @@ def create_attachment_file_name(
         city: str = None,
         category: str = None
         ) -> str:
+    """
+    Auxiliary function to generate the file name of attachment.
+
+    Parameters
+    ----------
+    user : str
+        The user that wants to receive the email with the filtered data.
+    filter_id : int
+        FilterId of this data filtered.
+    state : str, optional
+        State of the filter, by default None
+    city : str, optional
+        City of the filter, by default None
+    category : str, optional
+        Category of the filter, by default None
+
+    Returns
+    -------
+    str
+        File name of the attachment
+    """
     
     # Building the attachment file name with not null information.
     file_name= f'Filtro_{filter_id}_{user}'

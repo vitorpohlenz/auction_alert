@@ -46,8 +46,11 @@ Create the folder data/ containing the files:
   - State : `str`. Available states are:
     - "AC", "AL", "AP", "AM", "BA", "CE", "DF", "ES", "GO", "MA", "MT", "MS", "MG", "PA", "PB","PR", "PE", "PI", "RJ", "RN","RS", "RO", "RR", "SC", "SP", "SE", "TO"
   - City : `str`. City of interest, in UPPER CASE and **without accents**. Ex: "RIO DE JANEIRO", "FLORIANOPOLIS"
-  - Category : `str`. Ex: "Casa", "Terreno", "Apartamento", "Comercial"
-  - Modality : `str`. Ex: "1º Leilão SFI", "Venda Direta Online", "Licitação","Aberta","2º Leilão SFI", "Venda Direta", "Venda Online"
+  - Category : `str`. Available categories are: 
+    - "CASA", "TERRENO", "APARTAMENTO", "COMERCIAL", "GLEBA", "LOJA",
+"GLEBA URBANA", "OUTROS", "PREDIO", "SALA", "GALPAO", "SOBRADO","IMOVEL RURAL"
+  - Modality : `str`. Available modalties are: 
+    - "1 LEILAO SFI", "VENDA DIRETA ONLINE", "LICITACAO ABERTA","2 LEILAO SFI", "VENDA DIRETA", "VENDA ONLINE"
   - LowerPrice : `float`. Ex: 100000
   - UpperPrice : `float`. Ex: 500000
   
@@ -56,8 +59,8 @@ Create the folder data/ containing the files:
 |FilterId|UserId|State|City|Category|Modality|LowerPrice|UpperPrice|
 |:---:|:---:|:----:|:--------------------------------:|:-:|:-:|:-:|:-:|
 |1|1|"SP"|"SAO PAULO"|||||
-|2|1|"RJ"||"Terreno"||||
-|3|2|"MG"|"BELO HORIZONTE"|"Casa"||||
+|2|1|"RJ"||"TERRENO"||||
+|3|2|"MG"|"BELO HORIZONTE"|"CASA"||||
 
 ## Runing this project.
 Just run the file `auction_alert.py` with the python interpreter inside your virtual environment.

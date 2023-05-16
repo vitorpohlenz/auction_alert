@@ -147,6 +147,7 @@ def filter_data(
     elif not pd.isnull(upper_price):
         df = df.loc[df['Price'] <= upper_price ]
 
+    # Resetting the index to easy the comparison between dataframes.
     df.reset_index(drop=True, inplace=True)
 
     return df

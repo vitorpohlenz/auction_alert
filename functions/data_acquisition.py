@@ -11,6 +11,7 @@ sys.dont_write_bytecode = True
 # Common imports
 import pandas as pd
 from typing import Callable
+from unidecode import unidecode
 
 # Constants
 COLUMNS_NAMES_MAP = {
@@ -145,13 +146,30 @@ def adjust_data(data_df: pd.DataFrame, columns_names: dict[str]) -> pd.DataFrame
     data['Discount'] = data['Discount'].apply(lambda xrow: xrow/100 if xrow>100 else xrow)
 
     # Creating the categories based on description.
-    data['Category'] = data['Description'].apply(lambda s: s.split(',')[0])
-    
+    data['Category'] = data['Description'].apply(lambda s: unidecode(s.split(',')[0]).upper())
+
+    # Adjusting column Modality:
+    data['Modality'] = data['Modality'].apply(lambda s: unidecode(s).upper())
+    data['Modality'] = data['Modality'].str.replace('1O','1').str.replace('2O','2')
+
     return data
 
 def bad_lines_fixing(bad_line: list[str]) -> list[str]:
-    # The bad lines are because the use of ';' in 'Adress' column.
-    fixed_line = bad_line[:4]+[bad_line[4] + bad_line[5]] + bad_line[6:] 
+    """
+    Function to adjust 'bad lines' in reading data usind pandas.
+
+    Parameters
+    ----------
+    bad_line : list[str]
+        List containing the row of the bad line, containing wrong number of elements (columns)
+
+    Returns
+    -------
+    list[str]
+        List with the correct number of elements (columns)
+    """
+    # The bad lines are because the use of ';' in 'Adress' column. After comes columns 'Prince' and 'Appraisal'.
+    fixed_line = bad_line[:4]+[' '.join(bad_line[4:-6])] + bad_line[-6:] 
     return fixed_line
 
 def get_auctions_data(state :str, site: str = 'caixa') -> pd.DataFrame:

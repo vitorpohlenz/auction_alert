@@ -38,7 +38,6 @@ def send_action_notification(
     message_subject = f"Auction notification for {user}"
     for s in (state, city, category):
         if not pd.isnull(s):
-            file_name += f'_{s}'
             message_subject += f', {s}'
     
     # Building the email file name attachment.

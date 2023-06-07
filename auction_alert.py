@@ -71,7 +71,7 @@ for k in range(setups.shape[0]):
         file_path = output_dir+file_name
 
         # If this email was already sent in the past check if there is any update in the data.
-        if os.path.exists(file_path):
+        if (os.path.exists(file_path) & xrow.OnlyUpdates):
             old_data = pd.read_csv(file_path, sep=';')
             
             # If it has updates send new email.

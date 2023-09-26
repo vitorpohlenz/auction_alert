@@ -18,7 +18,6 @@ import smtplib
 import ssl
 import pandas as pd
 
-
 def send_action_notification(
         data_df: pd.DataFrame,
         output_dir: str,

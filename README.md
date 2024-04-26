@@ -23,7 +23,12 @@ Please follows this tutorial to install virtual environment in Python
 Enable apps to send emails from the specified account.
 - [Gmail](https://security.google.com/settings/security/apppasswords)
 
-![Image](https://devanswers.co/wp-content/uploads/2017/02/my-google-app-passwords.png)
+![Image](https://blog.jonsdocs.org.uk/content/images/size/w2000/2019/05/SigningInToGoogle_AppPasswords-1.PNG)
+
+#### Create an enviroment variable 
+Create an enviroment variable called `auction_email` in your Operational System with the password of the e-mail:
+- [Linux](https://www.freecodecamp.org/news/how-to-set-an-environment-variable-in-linux/)
+- [Windows](https://phoenixnap.com/kb/windows-set-environment-variable)
 
 ### Create a folder called `data` inside auction_alert folder
 

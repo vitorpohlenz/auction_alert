@@ -23,7 +23,12 @@ Please follows this tutorial to install virtual environment in Python
 Enable apps to send emails from the specified account.
 - [Gmail](https://security.google.com/settings/security/apppasswords)
 
-![Image](https://devanswers.co/wp-content/uploads/2017/02/my-google-app-passwords.png)
+![Image](https://blog.jonsdocs.org.uk/content/images/size/w2000/2019/05/SigningInToGoogle_AppPasswords-1.PNG)
+
+#### Create an enviroment variable 
+Create an enviroment variable called `auction_email` in your Operational System with the password of the e-mail:
+- [Linux](https://www.freecodecamp.org/news/how-to-set-an-environment-variable-in-linux/)
+- [Windows](https://phoenixnap.com/kb/windows-set-environment-variable)
 
 ### Create a folder called `data` inside auction_alert folder
 
@@ -43,6 +48,7 @@ Create the folder data/ containing the files:
 - `filters.csv` :
   - FilterId : `int`. Filters Ids, should be unique Id for each row of filter. **NOT NULL**
   - UserId : `int`. User Id referred in the file `users.csv`. **NOT NULL**
+  - OnlyUpdates : `bool`. If this filter should send emails only when has updated data(True) or send it always(False).
   - State : `str`. Available states are:
     - "AC", "AL", "AP", "AM", "BA", "CE", "DF", "ES", "GO", "MA", "MT", "MS", "MG", "PA", "PB","PR", "PE", "PI", "RJ", "RN","RS", "RO", "RR", "SC", "SP", "SE", "TO"
   - City : `str`. City of interest, in UPPER CASE and **without accents**. Ex: "RIO DE JANEIRO", "FLORIANOPOLIS"
@@ -56,11 +62,11 @@ Create the folder data/ containing the files:
   
 -  Ex:
 
-|FilterId|UserId|State|City|Category|Modality|LowerPrice|UpperPrice|
-|:---:|:---:|:----:|:--------------------------------:|:-:|:-:|:-:|:-:|
-|1|1|"SP"|"SAO PAULO"|||||
-|2|1|"RJ"||"TERRENO"||||
-|3|2|"MG"|"BELO HORIZONTE"|"CASA"||||
+|FilterId|UserId|OnlyUpdates|State|City|Category|Modality|LowerPrice|UpperPrice|
+|:---:|:---:|:----:|:----:|:--------------------------------:|:-:|:-:|:-:|:-:|
+|1|1|False|"SP"|"SAO PAULO"|||||
+|2|1|True|"RJ"||"TERRENO"||||
+|3|2|False|"MG"|"BELO HORIZONTE"|"CASA"||||
 
 ## Runing this project.
 Just run the file `auction_alert.py` with the python interpreter inside your virtual environment.
